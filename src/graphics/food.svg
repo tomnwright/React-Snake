@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 392 392" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(1,0,0,1,-526.237,-829.755)">
+        <g transform="matrix(1,0,0,1,44.6394,460.384)">
+            <rect x="481.598" y="369.37" width="391.435" height="391.435" style="fill:rgb(245,146,126);"/>
+            <g transform="matrix(1,0,0,1,134.41,-507.566)">
+                <circle cx="549.334" cy="1087.08" r="124.167" style="fill:rgb(224,32,35);"/>
+                <clipPath id="_clip1">
+                    <circle cx="549.334" cy="1087.08" r="124.167"/>
+                </clipPath>
+                <g clip-path="url(#_clip1)">
+                    <g transform="matrix(1,0,0,1,-62.6818,-12.6447)">
+                        <ellipse cx="700.847" cy="1035.22" rx="49.763" ry="50.078" style="fill:rgb(255,195,196);"/>
+                    </g>
+                </g>
+            </g>
+            <g transform="matrix(0.441902,0,0,0.441902,371.694,-6.62531)">
+                <circle cx="549.334" cy="1087.08" r="124.167" style="fill:rgb(239,87,89);"/>
+                <clipPath id="_clip2">
+                    <circle cx="549.334" cy="1087.08" r="124.167"/>
+                </clipPath>
+                <g clip-path="url(#_clip2)">
+                    <g transform="matrix(1,0,0,1,-62.6818,-12.6447)">
+                        <ellipse cx="700.847" cy="1035.22" rx="49.763" ry="50.078" style="fill:rgb(255,195,196);"/>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

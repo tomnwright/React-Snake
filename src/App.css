@@ -1,21 +1,39 @@
+/* .board {
+  margin-bottom:10%;
+} */
+
+.row {
+  height: 35px;
+  margin-top:3px;
+}
+
+.cell {
+  width: 35px;
+  height: 35px;
+  background-color: #38404d; 
+  display: inline-block;
+  margin:1.5px;
+  border-radius: 5px;
+}
+
+.snake-head {
+  background-image: url('graphics/head.svg');
+}
+.snake-dead {
+  background-image: url('graphics/dead.svg');
+}
+.snake-body {
+  background-image: url('graphics/body.svg');
+}
+
+.food {
+  background-image: url('graphics/food.svg');
+}
+
 .App {
   text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
   background-color: #282c34;
-  min-height: 100vh;
+  min-height: 90vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -24,15 +42,18 @@
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.footer {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #22252b;
+  font-size:small;
+  color:white;
+  min-height: 10vh;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+a {
+  color:#7EF5B2;
 }
