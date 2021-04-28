@@ -6,246 +6,243 @@ const UPDATE_INTERVAL = 250;
 const RESTART_WAIT = 1000;
 
 function randomInt(min, max) {
-	// generate random integer between min and max incl.
-	return Math.floor(Math.random() * (max - min + 1)) + min;
+  // generate random integer between min and max incl.
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 const randomCell = (not = []) => {
-	let seed;
-	do {
-		seed = randomInt(0, GRID_SIZE * GRID_SIZE - 1);
-	} while (not.includes(seed));
+  let seed;
+  do {
+    seed = randomInt(0, GRID_SIZE * GRID_SIZE - 1);
+  } while (not.includes(seed));
 
-	return seed;
+  return seed;
 };
 
 const DIRECTIONS = {
-	up: 0,
-	right: 1,
-	down: 2,
-	left: 3,
+  up: 0,
+  right: 1,
+  down: 2,
+  left: 3,
 };
 
 const DIRECTION_VECTORS = {
-	0: { dRow: -1, dCol: 0 },
-	1: { dRow: 0, dCol: 1 },
-	2: { dRow: 1, dCol: 0 },
-	3: { dRow: 0, dCol: -1 },
+  0: { dRow: -1, dCol: 0 },
+  1: { dRow: 0, dCol: 1 },
+  2: { dRow: 1, dCol: 0 },
+  3: { dRow: 0, dCol: -1 },
 };
 
 const OPPOSITE_DIRECTIONS = {
-	0: DIRECTIONS.down,
-	1: DIRECTIONS.left,
-	2: DIRECTIONS.up,
-	3: DIRECTIONS.right,
+  0: DIRECTIONS.down,
+  1: DIRECTIONS.left,
+  2: DIRECTIONS.up,
+  3: DIRECTIONS.right,
 };
 
 const DIRECTION_ROTATIONS = {
-	0: 0,
-	1: 90,
-	2: 180,
-	3: -90,
+  0: 0,
+  1: 90,
+  2: 180,
+  3: -90,
 };
 
 const Board = () => {
-	const [board] = useState(
-		new Array(GRID_SIZE).fill(0).map((row) => new Array(GRID_SIZE).fill(0))
-	);
-	const [snake, setSnake] = useState([randomCell()]);
-	const [food, setFood] = useState(randomCell(snake));
-	const [score, setScore] = useState(0);
+  const [board] = useState(
+    new Array(GRID_SIZE).fill(0).map((row) => new Array(GRID_SIZE).fill(0))
+  );
+  const [snake, setSnake] = useState([randomCell()]);
+  const [food, setFood] = useState(randomCell(snake));
+  const [score, setScore] = useState(0);
 
-	const [dead, setDead] = useState(false);
+  const [dead, setDead] = useState(false);
 
-	const allowInput = useRef(true);
-	const direction = useRef(randomInt(0,3));
-	const queueDirection = useRef(NaN);
+  const allowInput = useRef(true);
+  const direction = useRef(randomInt(0, 3));
+  const queueDirection = useRef(NaN);
 
-	// update if still alive
-	useInterval(
-		() => {
-			moveSnake();
-		},
-		dead ? null : UPDATE_INTERVAL
-	);
-	useEffect(() => {
-		window.addEventListener("keydown", (e) => {
-			handleKeydown(e);
-		});
-	}, []);
 
-	const moveSnake = () => {
-		console.log("Moving Snake");
+  // update if still alive
+  useInterval(
+    () => {
+      moveSnake();
+    },
+    dead ? null : UPDATE_INTERVAL
+  );
+  useEffect(() => {
+    window.addEventListener("keydown", (e) => {
+      handleKeydown(e);
+    });
+  }, []);
 
-		allowInput.current = true;
+  const moveSnake = () => {
+    console.log("Moving Snake");
 
-		// calculate next head position
-		let head = snake[0];
-		let nextHead = nextHeadIndex(head, direction.current);
+    allowInput.current = true;
 
-		if (isNaN(nextHead)) {
-			// out of bounds
-			return die();
-		}
+    // calculate next head position
+    let head = snake[0];
+    let nextHead = nextHeadIndex(head, direction.current);
 
-		// add next position
-		let newSnake = [nextHead, ...snake];
+    if (isNaN(nextHead)) {
+      // out of bounds
+      return die();
+    }
 
-		if (nextHead === food) {
-			// landing on food
-			console.log("EAT!");
-			setFood(randomCell(newSnake));
-		} else {
-			// no food: remove final element
-			newSnake.pop();
-		}
+    // add next position
+    let newSnake = [nextHead, ...snake];
 
-		// if on self
-		if (snake.includes(nextHead)) {
-			return die();
-		}
+    if (nextHead === food) {
+      // landing on food
+      console.log("EAT!");
+      setFood(randomCell(newSnake));
+    } else {
+      // no food: remove final element
+      newSnake.pop();
+    }
 
-		// update snake
+    // if on self
+    if (snake.includes(nextHead)) {
+      return die();
+    }
 
-		setSnake(newSnake);
+    // update snake
 
-		// update score
-		setScore((newSnake.length - 1) * 10);
+    setSnake(newSnake);
 
-		handleDirQueue();
-	};
+    // update score
+    setScore((newSnake.length - 1) * 10);
 
-	const handleKeydown = (e) => {
-		let inputDirection;
+    handleDirQueue();
+  };
 
-		switch (e.key) {
-			case "ArrowRight":
-			case "d":
-				inputDirection = DIRECTIONS.right;
-				break;
-			case "ArrowLeft":
-			case "a":
-				inputDirection = DIRECTIONS.left;
-				break;
-			case "ArrowUp":
-			case "w":
-				inputDirection = DIRECTIONS.up;
-				break;
-			case "ArrowDown":
-			case "s":
-				inputDirection = DIRECTIONS.down;
-				break;
-			default:
-				return;
-		}
+  const handleKeydown = (e) => {
+    let inputDirection;
 
-		if (!allowInput.current) {
-			queueDirection.current = inputDirection;
-			return;
-		}
+    switch (e.key) {
+      case "ArrowRight":
+      case "d":
+        inputDirection = DIRECTIONS.right;
+        break;
+      case "ArrowLeft":
+      case "a":
+        inputDirection = DIRECTIONS.left;
+        break;
+      case "ArrowUp":
+      case "w":
+        inputDirection = DIRECTIONS.up;
+        break;
+      case "ArrowDown":
+      case "s":
+        inputDirection = DIRECTIONS.down;
+        break;
+      default:
+        return;
+    }
 
-		handleDirInput(inputDirection);
-	};
+	e.preventDefault();
 
-	const handleDirInput = (inputDirection) => {
-		let opposite = OPPOSITE_DIRECTIONS[direction.current];
-		if (
-			direction.current === inputDirection ||
-			opposite === inputDirection
-		) {
-			return;
-		}
+    if (!allowInput.current) {
+      queueDirection.current = inputDirection;
+      return;
+    }
 
-		direction.current = inputDirection;
-		allowInput.current = false;
-	};
-	const handleDirQueue = () => {
-		if (isNaN(queueDirection.current)) {
-			return;
-		}
+    handleDirInput(inputDirection);
+  };
 
-		handleDirInput(queueDirection.current);
-		queueDirection.current = NaN;
-	};
+  const handleDirInput = (inputDirection) => {
+    let opposite = OPPOSITE_DIRECTIONS[direction.current];
+    if (direction.current === inputDirection || opposite === inputDirection) {
+      return;
+    }
 
-	const die = () => {
-		setDead(true);
-		setTimeout(restart, RESTART_WAIT);
-        queueDirection.current = NaN;
-	};
-	const restart = () => {
-		let newSnake = [randomCell()];
-		setSnake(newSnake);
-		setFood(randomCell(newSnake));
+    direction.current = inputDirection;
+    allowInput.current = false;
+  };
+  const handleDirQueue = () => {
+    if (isNaN(queueDirection.current)) {
+      return;
+    }
 
-		setScore(0);
-		direction.current = randomInt(0,3);
+    handleDirInput(queueDirection.current);
+    queueDirection.current = NaN;
+  };
 
-		setDead(false);
-	};
+  const die = () => {
+    setDead(true);
+    setTimeout(restart, RESTART_WAIT);
+    queueDirection.current = NaN;
+  };
+  const restart = () => {
+    let newSnake = [randomCell()];
+    setSnake(newSnake);
+    setFood(randomCell(newSnake));
 
-	const nextHeadIndex = (headIndex, moveDirection) => {
-		let row = Math.floor(headIndex / GRID_SIZE);
-		let col = headIndex % GRID_SIZE;
+    setScore(0);
+    direction.current = randomInt(0, 3);
 
-		const { dRow, dCol } = DIRECTION_VECTORS[moveDirection];
+    setDead(false);
+  };
 
-		row += dRow;
-		col += dCol;
+  const nextHeadIndex = (headIndex, moveDirection) => {
+    let row = Math.floor(headIndex / GRID_SIZE);
+    let col = headIndex % GRID_SIZE;
 
-		if (row < 0 || row >= GRID_SIZE || col < 0 || col >= GRID_SIZE) {
-			return NaN;
-		}
+    const { dRow, dCol } = DIRECTION_VECTORS[moveDirection];
 
-		return row * GRID_SIZE + col;
-	};
+    row += dRow;
+    col += dCol;
 
-	const computeCellClass = (row, col) => {
-		let index = row * GRID_SIZE + col;
+    if (row < 0 || row >= GRID_SIZE || col < 0 || col >= GRID_SIZE) {
+      return NaN;
+    }
 
-		return food === index
-			? "food" // food
-			: !snake.includes(index)
-			? "" // not snake (or food)
-			: index !== snake[0]
-			? "snake-body" // not head
-			: dead
-			? "snake-dead" // dead head
-			: "snake-head"; // normal head
-	};
+    return row * GRID_SIZE + col;
+  };
 
-	const computeCellStyle = (row, col) => {
-		let index = row * GRID_SIZE + col;
+  const computeCellClass = (row, col) => {
+    let index = row * GRID_SIZE + col;
 
-		if (index !== snake[0]) {
-			// not head
-			return {};
-		}
+    return food === index
+      ? "food" // food
+      : !snake.includes(index)
+      ? "" // not snake (or food)
+      : index !== snake[0]
+      ? "snake-body" // not head
+      : dead
+      ? "snake-dead" // dead head
+      : "snake-head"; // normal head
+  };
 
-		return {
-			transform: `rotate(${DIRECTION_ROTATIONS[direction.current]}deg)`,
-		};
-	};
+  const computeCellStyle = (row, col) => {
+    let index = row * GRID_SIZE + col;
 
-	return (
-		<div className="board" onClick={moveSnake}>
-			<h1>Score: {score}</h1>
-			{board.map((row, rowIndex) => (
-				<div key={rowIndex} className="row">
-					{row.map((cell, colIndex) => (
-						<div
-							key={colIndex}
-							className={`cell ${computeCellClass(
-								rowIndex,
-								colIndex
-							)}`}
-							style={computeCellStyle(rowIndex, colIndex)}
-						></div>
-					))}
-				</div>
-			))}
-		</div>
-	);
+    if (index !== snake[0]) {
+      // not head
+      return {};
+    }
+
+    return {
+      transform: `rotate(${DIRECTION_ROTATIONS[direction.current]}deg)`,
+    };
+  };
+
+  return (
+    <div className="board" onClick={moveSnake}>
+      <h1>Score: {score}</h1>
+      {board.map((row, rowIndex) => (
+        <div key={rowIndex} className="row">
+          {row.map((cell, colIndex) => (
+            <div
+              key={colIndex}
+              className={`cell ${computeCellClass(rowIndex, colIndex)}`}
+              style={computeCellStyle(rowIndex, colIndex)}
+            ></div>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
 };
 
 export default Board;
